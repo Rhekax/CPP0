@@ -15,7 +15,6 @@ class PhoneBook {
 		void Add(Contact person, uint32_t index);
 		Contact Search(uint32_t index);
 		void Exit(void);
-		Contact getContact(uint32_t index);
 };
 
 
