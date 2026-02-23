@@ -2,6 +2,7 @@
 #include "PhoneBook.hpp"
 #include "Contact.hpp"
 #include <cstdint>
+#include <cstdlib>
 
 
 void	PhoneBook::Add(Contact person, uint32_t index) {
@@ -15,4 +16,8 @@ void	PhoneBook::Add(Contact person, uint32_t index) {
 
 Contact	PhoneBook::Search(uint32_t index) {
 	return this->contacts[index];
+}
+
+void PhoneBook::Exit() {
+	exit(0);
 }
