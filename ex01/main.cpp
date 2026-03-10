@@ -3,9 +3,9 @@
 #include "PhoneBook.hpp"
 #include <cstddef>
 #include <iostream>
-#include <ostream>
 
-enum class Action {
+
+enum Action {
 	ADD,
 	SEARCH,
 	EXIT,
@@ -13,34 +13,31 @@ enum class Action {
 };
 
 Action hashString(const std::string& str) {
-    if (str == "ADD") return Action::ADD;
-    if (str == "SEARCH")  return Action::SEARCH;
-    if (str == "EXIT")  return Action::EXIT;
-    return Action::NONE;
+    if (str == "ADD") return ADD;
+    if (str == "SEARCH")  return SEARCH;
+    if (str == "EXIT")  return EXIT;
+    return NONE;
 }
 
-int readIndex()
-{
+int readIndex() {
+    std::string line;
     int i;
 
-    while (true)
-    {
+    while (true) {
         std::cout << "Enter index (0-7): ";
-        if (!(std::cin >> i))
-        {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
-            std::cout << "Not a number.\n";
-            continue;
-        }
+        std::getline(std::cin, line);
+        if (line.empty()) continue;
 
-        if (i >= 0 && i <= 7)
-        {
-            std::cin.ignore(1000, '\n');
-            return i;
-        }
+        bool valid = true;
+        for (size_t j = 0; j < line.size(); ++j)
+            if (!isdigit(line[j])) { valid = false; break; }
 
-        std::cout << "Index must be between 0 and 7.\n";
+        if (!valid) { std::cout << "Must be numeric.\n"; continue; }
+
+        i = atoi(line.c_str());
+        if (i < 0 || i > 7) { std::cout << "Index must be 0-7.\n"; continue; }
+
+        return i;
     }
 }
 
@@ -66,73 +63,71 @@ std::string readNonEmpty(const std::string &prompt)
     }
 }
 
-int	main(void)
-{
-	int i ;
-	int index = 0;
-	int pn;
-	std::string input;
-	std::string ds;
-	std::string fn;
-	std::string ln;
-	std::string nn;
-	Contact c;
-	Action action = Action::NONE;
-	PhoneBook pbook;
-	while (1) {
-		std::cin >> input ;
-		action = hashString(input);
-		switch (action) {
-			case Action::NONE :
-				break;
-			case Action::ADD:
-			{
-			    std::string fn, ln, nn, ds;
-			    int pn;
-			
-			    std::cin.ignore(1000, '\n');
-			
-			    fn = readNonEmpty("Enter First Name: ");
-			    ln = readNonEmpty("Enter Last Name: ");
-			    nn = readNonEmpty("Enter Nickname: ");
-			    ds = readNonEmpty("Enter Darkest Secret: ");
-			
-			    while (true)
-			    {
-			        std::cout << "Enter Phone Number: ";
-			        if (!(std::cin >> pn))
-			        {
-			            std::cin.clear();
-			            std::cin.ignore(1000, '\n');
-			            std::cout << "Phone number must be numeric.\n";
-			            continue;
-			        }
-			        std::cin.ignore(1000, '\n');
-			        break;
-			    }
-			
-			    Contact c(ds, fn, ln, nn, pn);
-			    pbook.Add(c, index);
-			    index = (index + 1) % 8;
-			
-			    std::cout << "Contact added.\n";
-			    break;
-			}
-			case Action::SEARCH:
-			{
-			    std::cout << "     index|first name| last name|  nickname\n";
-			
-			    for (int c = 0; c < 8; c++)
-			        std::cout << "         " << c << "|" << pbook.Search(c) << std::endl;
-			
-			    int i = readIndex();
-			
-			    std::cout << "         " << i << "|" << pbook.Search(i) << std::endl;
-			    break;
-			}
-			case Action::EXIT :
-				pbook.Exit();
-		}
-	}
-	return 0;
+int main() {
+    PhoneBook pbook;
+    int index = 0;
+    std::string input;
+
+    while (true) {
+        std::getline(std::cin, input);
+        if (input.empty()) continue;
+
+        Action action = hashString(input);
+
+        switch(action) {
+            case NONE:
+                break;
+
+            case ADD: {
+                std::string fn = readNonEmpty("Enter First Name: ");
+                std::string ln = readNonEmpty("Enter Last Name: ");
+                std::string nn = readNonEmpty("Enter Nickname: ");
+                std::string ds = readNonEmpty("Enter Darkest Secret: ");
+
+                int pn;
+                while (true) {
+                    std::string line;
+                    std::cout << "Enter Phone Number: ";
+                    std::getline(std::cin, line);
+
+                    if (line.empty()) { std::cout << "Cannot be empty.\n"; continue; }
+
+                    bool valid = true;
+                    for (size_t i = 0; i < line.size(); ++i)
+                        if (!isdigit(line[i])) { valid = false; break; }
+
+                    if (!valid) { std::cout << "Must be numeric.\n"; continue; }
+
+                    pn = atoi(line.c_str());
+                    break;
+                }
+
+                Contact c(ds, fn, ln, nn, pn);
+                pbook.Add(c, index);
+                index = (index + 1) % 8;
+
+                std::cout << "Contact added.\n";
+                break;
+            }
+
+            case SEARCH: {
+                std::cout << "     index|first name| last name|  nickname\n";
+                for (int i = 0; i < 8; i++)
+                    std::cout << "         " << i << "|" << pbook.Search(i) << std::endl;
+
+                int i;
+                while (true) {
+                    i = readIndex();
+                    if (i >=0 && i <=7) break;
+                    std::cout << "Invalid index. Try again.\n";
+                }
+                std::cout << "         " << i << "|" << pbook.Search(i) << std::endl;
+                break;
+            }
+
+            case EXIT:
+                pbook.Exit();
+                return 0;
+        }
+    }
 }

@@ -2,7 +2,7 @@
  # define PHONEBOOK_H
 
 #include "Contact.hpp"
-#include <cstdint>
+#include <stdlib.h>
 
 class PhoneBook {
 
@@ -12,8 +12,8 @@ class PhoneBook {
 	public:
 		PhoneBook();
 		~PhoneBook();
-		void Add(Contact person, uint32_t index);
-		Contact Search(uint32_t index);
+		void Add(Contact person, int index);
+		Contact Search(int index);
 		void Exit(void);
 };
 

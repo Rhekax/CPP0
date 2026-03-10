@@ -22,11 +22,11 @@ class Contact {
 				const std::string& last_name,
 				const std::string& nickname,
 				int phone_number);
-				std::string getFirstName() const;
-    			std::string getLastName() const;
-    			std::string getNickname() const;
-    			std::string getDarkestSecret() const;
-    			int getPhoneNumber() const;
+				std::string getFirstName(void) const;
+    			std::string getLastName(void) const;
+    			std::string getNickname(void) const;
+    			std::string getDarkestSecret(void) const;
+    			int getPhoneNumber(void) const;
 
  };
 	std::ostream& operator<<(std::ostream &out, const Contact& contact);

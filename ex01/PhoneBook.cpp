@@ -1,18 +1,17 @@
 
 #include "PhoneBook.hpp"
 #include "Contact.hpp"
-#include <cstdint>
-#include <cstdlib>
+
 
 PhoneBook::PhoneBook() {}
 PhoneBook::~PhoneBook() {}
 
-void	PhoneBook::Add(Contact person, uint32_t index) {
+void	PhoneBook::Add(Contact person, int index) {
 
 	this->contacts[index] = person;
 }
 
-Contact	PhoneBook::Search(uint32_t index) {
+Contact	PhoneBook::Search(int index) {
 	return this->contacts[index];
 }
 
